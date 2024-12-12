@@ -1,0 +1,103 @@
+  // Prisma Schema (dengan tambahan Cart)
+
+  generator client {
+    provider = "prisma-client-js"
+  }
+
+  datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+  }
+
+  model User {
+    id            Int    @id @default(autoincrement())
+    name          String    
+    email         String    @unique()
+    password      String
+    Nik           String
+    alamat        String
+    tempatLahir   String
+    jenisKelamin  String
+    tanggalLahir  String 
+    noTelp        String
+    bookings     Booking[] 
+
+    createdAt DateTime  @default(now())
+
+    @@index([email,Nik])
+  }
+
+
+  model Admin {
+    id            Int    @id @default(autoincrement())
+    name String       
+    email String      @unique()
+    password  String
+    noTelp  String  
+
+    @@index([email])
+  }  
+
+  model  Gedung {
+    id           String        @id @default(cuid())
+    name         String
+    alamat       String
+    harga        Decimal       
+    deskripsi    String?      
+    kapasitas    Int?        
+    images       GedungImage[]
+    ketersediaan String       
+    bookings     Booking[]    
+    createdAt    DateTime     @default(now())
+    updatedAt    DateTime     @updatedAt
+
+  @@index([name])
+  }
+  model  GedungImage{
+    id       String @id @default(cuid())
+    url      String
+    gedungId String 
+    gedung   Gedung @relation(fields: [gedungId], references: [id], onDelete: Cascade)
+
+    @@index([gedungId])
+  }
+
+
+model Booking {
+  id        String   @id @default(cuid())
+  userId    Int
+  gedungId  String
+  startDate DateTime
+  endDate   DateTime
+  status    BookingStatus @default(PENDING)
+  totalHarga Decimal
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Payment Payment[]
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gedung    Gedung   @relation(fields: [gedungId], references: [id], onDelete: Cascade)
+
+  @@index([userId, gedungId])
+  @@index([status])
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+model Payment {
+  id String   @id  @default(cuid())
+  bookingId String   
+  booking Booking  @relation(fields: [bookingId],references: [id])
+  cretedAt  DateTime  @default(now())
+  harga Float
+  metode  METODE
+}
+enum  METODE  {
+  CASH
+  QRIS
+  TRANSFER
+}
