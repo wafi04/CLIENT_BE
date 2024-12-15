@@ -1,4 +1,3 @@
-  // Prisma Schema (dengan tambahan Cart)
 
   generator client {
     provider = "prisma-client-js"
