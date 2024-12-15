@@ -26,6 +26,7 @@ async function bootstrap() {
   //   console.error('Seeding failed', error);
   // }
 
+  // url yang bisa akses
   app.enableCors({
     origin: "http://localhost:5173",
     credentials: true,

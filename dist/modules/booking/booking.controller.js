@@ -60,6 +60,7 @@ let BookingController = class BookingController {
         return this.BookingService.updateStatusBooking(id);
     }
     async Delete(id) {
+        console.log(id);
         return this.BookingService.deleteBooking(id);
     }
     async GetBookingByUser(request, id) {

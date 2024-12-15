@@ -43,10 +43,8 @@ export class GedungController {
     @Query("date") dateString?: string,
     @Query("range") rangeDays?: string
   ) {
-    // Konversi date string ke Date
     const date = dateString ? new Date(dateString) : new Date();
 
-    // Konversi range ke number, default 1
     const range = rangeDays ? parseInt(rangeDays, 10) : 1;
 
     // Validasi tanggal

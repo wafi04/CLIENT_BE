@@ -50,7 +50,6 @@ export class BookingService {
     return await this.db.booking.findMany({
       where: {
         userId: id,
-        status: "PENDING",
       },
       include: {
         gedung: {
@@ -72,8 +71,11 @@ export class BookingService {
       },
     });
   }
-
   async deleteBooking(bookingId: string) {
+    await this.db.payment.deleteMany({
+      where: { bookingId: bookingId },
+    });
+
     return await this.db.booking.delete({
       where: { id: bookingId },
     });

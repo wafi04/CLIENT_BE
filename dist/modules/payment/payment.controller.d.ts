@@ -5,9 +5,9 @@ export declare class PaymentController {
     constructor(paymentService: PaymentService);
     Create(data: PaymentDto): Promise<{
         id: string;
-        bookingId: string;
-        cretedAt: Date;
         harga: number;
+        bookingId: string;
         metode: import(".prisma/client").$Enums.METODE;
+        cretedAt: Date;
     }>;
 }

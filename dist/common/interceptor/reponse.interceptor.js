@@ -12,7 +12,7 @@ const operators_1 = require("rxjs/operators");
 const response_dto_1 = require("../dto/response.dto");
 let ResponseInterceptor = class ResponseInterceptor {
     intercept(context, next) {
-        return next.handle().pipe((0, operators_1.map)(data => {
+        return next.handle().pipe((0, operators_1.map)((data) => {
             const response = context.switchToHttp().getResponse();
             const statusCode = response.statusCode;
             let message = this.getMessageByStatusCode(statusCode);
@@ -22,33 +22,33 @@ let ResponseInterceptor = class ResponseInterceptor {
     getMessageByStatusCode(statusCode) {
         switch (statusCode) {
             case common_1.HttpStatus.OK:
-                return 'Request processed successfully';
+                return "Request processed successfully";
             case common_1.HttpStatus.CREATED:
-                return 'Resource created successfully';
+                return "Resource created successfully";
             case common_1.HttpStatus.ACCEPTED:
-                return 'Request accepted for processing';
+                return "Request accepted for processing";
             case common_1.HttpStatus.BAD_REQUEST:
-                return 'Bad Request: Invalid input or parameters';
+                return "Bad Request: Invalid input or parameters";
             case common_1.HttpStatus.UNAUTHORIZED:
-                return 'Unauthorized: Authentication required';
+                return "Unauthorized: Authentication required";
             case common_1.HttpStatus.FORBIDDEN:
-                return 'Forbidden: You do not have permission';
+                return "Forbidden: You do not have permission";
             case common_1.HttpStatus.NOT_FOUND:
-                return 'Not Found: Resource does not exist';
+                return "Not Found: Resource does not exist";
             case common_1.HttpStatus.CONFLICT:
-                return 'Conflict: Resource already exists';
+                return "Conflict: Resource already exists";
             case common_1.HttpStatus.INTERNAL_SERVER_ERROR:
-                return 'Internal Server Error: Something went wrong';
+                return "Internal Server Error: Something went wrong";
             case common_1.HttpStatus.BAD_GATEWAY:
-                return 'Bad Gateway: Invalid response from upstream server';
+                return "Bad Gateway: Invalid response from upstream server";
             case common_1.HttpStatus.SERVICE_UNAVAILABLE:
-                return 'Service Unavailable: Server is temporarily unable to handle the request';
+                return "Service Unavailable: Server is temporarily unable to handle the request";
             case 200:
-                return 'Resource updated successfully';
+                return "Resource updated successfully";
             case 204:
-                return 'Resource successfully modified';
+                return "Resource successfully modified";
             default:
-                return 'Request processed';
+                return "Request processed";
         }
     }
 };

@@ -57,11 +57,9 @@ export class GedungService {
     const bookedDates = await this.db.booking.findMany({
       where: {
         gedungId: gedungId,
-        // Opsional: filter hanya booking yang sudah dikonfirmasi atau selesai
       },
     });
 
-    // Transform menjadi array tanggal yang sudah dibooking
     const occupiedDateRanges = bookedDates.map((booking) => ({
       startDate: booking.startDate,
       endDate: booking.endDate,

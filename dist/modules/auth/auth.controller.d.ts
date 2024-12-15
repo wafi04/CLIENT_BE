@@ -4,12 +4,21 @@ import { LoginDto } from "./dto/login.dto";
 import { RegisterAdmin, RegisterDto } from "./dto/Register.dto";
 import { AuthenticatedRequest } from "src/common/interfaces/user";
 import { CookieService } from "./cookie.service";
+import { PrismaService } from "src/prisma/prisma.service";
 export declare class AuthController {
     private readonly authService;
     private cookieService;
+    private readonly prisma;
     private logger;
-    constructor(authService: AuthService, cookieService: CookieService);
+    constructor(authService: AuthService, cookieService: CookieService, prisma: PrismaService);
     register(data: RegisterDto): Promise<{
+        role: string;
+        name: string;
+        email: string;
+        noTelp: string;
+        id: number;
+    } | {
+        role: string;
         name: string;
         email: string;
         Nik: string;

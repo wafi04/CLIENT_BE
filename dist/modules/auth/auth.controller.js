@@ -19,16 +19,83 @@ const Register_dto_1 = require("./dto/Register.dto");
 const public_decorator_1 = require("../../common/decorator/public.decorator");
 const auth_guard_1 = require("./guards/auth.guard");
 const cookie_service_1 = require("./cookie.service");
+const prisma_service_1 = require("../../prisma/prisma.service");
+const bcrypt = require("bcrypt");
 let AuthController = class AuthController {
-    constructor(authService, cookieService) {
+    constructor(authService, cookieService, prisma) {
         this.authService = authService;
         this.cookieService = cookieService;
+        this.prisma = prisma;
         this.logger = new common_1.Logger();
     }
     async register(data) {
-        return await this.authService.register(data);
+        try {
+            const isAdminEmail = data.email === "admin@admin.com";
+            const existingUser = await this.prisma.user.findFirst({
+                where: {
+                    OR: [
+                        { email: data.email },
+                        ...(isAdminEmail ? [] : [{ name: data.name }]),
+                    ],
+                },
+            });
+            const existingAdmin = isAdminEmail
+                ? await this.prisma.admin.findUnique({
+                    where: { email: data.email },
+                })
+                : null;
+            if (existingUser) {
+                throw new common_1.UnauthorizedException(existingUser.email === data.email
+                    ? "Email sudah terdaftar"
+                    : "Nama pengguna sudah digunakan");
+            }
+            if (existingAdmin) {
+                throw new common_1.UnauthorizedException("Admin dengan email ini sudah terdaftar");
+            }
+            const hashedPassword = await bcrypt.hash(data.password, 10);
+            if (isAdminEmail) {
+                const admin = await this.prisma.admin.create({
+                    data: {
+                        name: data.name,
+                        email: data.email,
+                        password: hashedPassword,
+                        noTelp: data.noTelp || "",
+                    },
+                });
+                const { password: _, ...adminWithoutPassword } = admin;
+                return {
+                    ...adminWithoutPassword,
+                    role: "ADMIN",
+                };
+            }
+            else {
+                const user = await this.prisma.user.create({
+                    data: {
+                        name: data.name,
+                        Nik: data.Nik || "",
+                        alamat: data.alamat || "",
+                        jenisKelamin: data.jenisKelamin || "",
+                        noTelp: data.noTelp || "",
+                        tanggalLahir: data.tanggalLahir || "",
+                        tempatLahir: data.tempatLahir || "",
+                        email: data.email,
+                        password: hashedPassword,
+                    },
+                });
+                const { password: _, ...userWithoutPassword } = user;
+                return {
+                    ...userWithoutPassword,
+                    role: "USER",
+                };
+            }
+        }
+        catch (error) {
+            this.logger.error("Registration error", error);
+            throw new common_1.UnauthorizedException(error.message || "Registrasi gagal");
+        }
     }
     async registerAdmin(data) {
+        console.log(data);
         return await this.authService.createAdmin(data);
     }
     async login(loginDto, res) {
@@ -131,6 +198,7 @@ __decorate([
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)("auth"),
     __metadata("design:paramtypes", [auth_service_1.AuthService,
-        cookie_service_1.CookieService])
+        cookie_service_1.CookieService,
+        prisma_service_1.PrismaService])
 ], AuthController);
 //# sourceMappingURL=auth.controller.js.map

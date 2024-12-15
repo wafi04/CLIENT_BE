@@ -1,4 +1,4 @@
-import { ValidationOptions, ValidatorConstraintInterface } from 'class-validator';
+import { ValidationOptions, ValidatorConstraintInterface } from "class-validator";
 export declare class PasswordValidator implements ValidatorConstraintInterface {
     validate(value: string): boolean;
     defaultMessage(): string;

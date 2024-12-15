@@ -15,12 +15,12 @@ let PasswordValidator = class PasswordValidator {
         return emailRegex.test(value);
     }
     defaultMessage() {
-        return 'email must be a valid email address';
+        return "email must be a valid email address";
     }
 };
 exports.PasswordValidator = PasswordValidator;
 exports.PasswordValidator = PasswordValidator = __decorate([
-    (0, class_validator_1.ValidatorConstraint)({ name: 'PasswordValidator', async: false })
+    (0, class_validator_1.ValidatorConstraint)({ name: "PasswordValidator", async: false })
 ], PasswordValidator);
 function PasswordValidator2(validationOptions) {
     return function (object, propertyName) {

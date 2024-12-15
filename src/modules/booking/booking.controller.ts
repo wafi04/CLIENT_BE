@@ -81,6 +81,7 @@ export class BookingController {
 
   @Delete("/:id")
   async Delete(@Param("id") id: string) {
+    console.log(id);
     return this.BookingService.deleteBooking(id);
   }
 
